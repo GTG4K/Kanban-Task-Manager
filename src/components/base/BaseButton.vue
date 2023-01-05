@@ -14,6 +14,7 @@ const styling = computed(() => {
   return {
     full: props.size === 'full',
     invert: props.theme === 'invert',
+    danger: props.theme === 'danger',
   };
 });
 </script>
@@ -61,6 +62,20 @@ h2 {
   border: 2px solid var(--color-main-200);
 }
 .dark button.invert:hover h2 {
+  color: var(--color-accent-100);
+}
+
+/* DANGER */
+.dark button.danger {
+  background: var(--color-error-100);
+}
+.dark button.danger h2 {
+  color: var(--color-accent-100);
+}
+.dark button.danger:hover {
+  background: var(--color-error-200);
+}
+.dark button.danger:hover h2 {
   color: var(--color-accent-100);
 }
 </style>

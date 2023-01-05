@@ -83,4 +83,55 @@ export default {
 
     task.status = payload.status;
   },
+  changeBoard(state, payload) {
+    const boards = state.boards;
+
+    const board = boards.find((board) => board.name === payload.board);
+    const columns = board.columns;
+
+    const oldColumns = payload.columns.filter((column) => column.new === false);
+    const newColumns = payload.columns.filter((column) => column.new === true);
+
+    let columnFound = false;
+    const removed = [];
+
+    //edit old columns that changed
+    columns.forEach((column) => {
+      columnFound = false;
+      oldColumns.forEach((oldColumn) => {
+        if (column.name === oldColumn.oldName) {
+          column.name = oldColumn.value;
+          columnFound = true;
+        }
+      });
+      if (!columnFound) {
+        removed.push(column.name);
+      }
+    });
+
+    //remove old columns that were removed
+    columns.forEach((column) => {
+      if (removed.includes(column.name)) {
+        const columnIndex = columns.findIndex(
+          (storeColumn) => storeColumn.name === column.name
+        );
+        columns.splice(columnIndex, 1);
+      }
+    });
+
+    //add new columns
+    newColumns.forEach((column) => {
+      const newColumn = { name: column.value, tasks: [] };
+      columns.push(newColumn);
+    });
+
+    // edit board name
+    // board.name = payload.boardTitle;
+  },
+  deleteBoard(state, payload) {
+    const boards = state.boards;
+
+    const boardIndex = boards.findIndex((board) => board.name === payload.board);
+    boards.splice(boardIndex, 1);
+  },
 };

@@ -10,7 +10,7 @@
       <sidebar-button type="new" @click="toggleNewBoard"></sidebar-button>
     </div>
     <the-dialog :tp="false" v-model="newBoardOn">
-      <add-board></add-board>
+      <add-board @closeDialog="closeDialog"></add-board>
     </the-dialog>
   </div>
 </template>
@@ -34,6 +34,10 @@ const boardNames = computed(() => {
 
 function toggleNewBoard() {
   newBoardOn.value = !newBoardOn.value;
+}
+
+function closeDialog() {
+  newBoardOn.value = false;
 }
 </script>
 

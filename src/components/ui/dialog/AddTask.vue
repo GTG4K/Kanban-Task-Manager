@@ -41,6 +41,7 @@ const route = useRoute();
 const store = useStore();
 const routeName = ref(route.path);
 
+const emits = defineEmits(['closeDialog']);
 const title = reactive({ value: null, error: false });
 const description = reactive({ value: null, error: false });
 
@@ -91,6 +92,7 @@ function addTask() {
     status: status.value,
     subtasks: subtasks.value,
   });
+  emits('closeDialog');
 }
 </script>
 

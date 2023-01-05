@@ -9,15 +9,25 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
-const props = defineProps(['size']);
+const props = defineProps(['size', 'theme']);
 
 const headingStyle = computed(() => {
-  return {
-    xl: props.size.toLowerCase() === 'xl',
-    l: props.size.toLowerCase() === 'l',
-    m: props.size.toLowerCase() === 'm',
-    s: props.size.toLowerCase() === 's',
-  };
+  if (props.theme) {
+    return {
+      xl: props.size.toLowerCase() === 'xl',
+      l: props.size.toLowerCase() === 'l',
+      m: props.size.toLowerCase() === 'm',
+      s: props.size.toLowerCase() === 's',
+      danger: props.theme.toLowerCase() === 'danger',
+    };
+  } else {
+    return {
+      xl: props.size.toLowerCase() === 'xl',
+      l: props.size.toLowerCase() === 'l',
+      m: props.size.toLowerCase() === 'm',
+      s: props.size.toLowerCase() === 's',
+    };
+  }
 });
 </script>
 
@@ -57,5 +67,8 @@ h2 {
   font-size: var(--heading-size-s);
   color: var(--heading-color-200);
   letter-spacing: var(--heading-spacing);
+}
+.danger {
+  color: var(--color-error-100);
 }
 </style>

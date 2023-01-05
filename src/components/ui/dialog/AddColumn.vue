@@ -15,6 +15,8 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import InputText from '../../base/input/InputText.vue';
 
+const emits = defineEmits(['closeDialog']);
+
 const route = useRoute();
 const store = useStore();
 const routeName = ref(route.path);
@@ -25,6 +27,7 @@ function addColumn() {
   const [, , path] = routeName.value.split('/');
   const cleanedPath = path.replace('%20', ' ');
   store.commit('addColumn', { name: title.value, board: cleanedPath });
+  emits('closeDialog');
 }
 </script>
 

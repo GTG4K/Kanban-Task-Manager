@@ -6,11 +6,17 @@
     </div>
     <div class="options">
       <base-button @click="toggleAddTask">+ Add New Task</base-button>
-      <base-dropdown :options="options"></base-dropdown>
+      <base-dropdown :options="options" @optionClick="toggleBoardDialog"></base-dropdown>
     </div>
   </header>
   <the-dialog v-model="addTaskOn" :tp="false">
-    <add-task></add-task>
+    <add-task @closeDialog="closeDialog('addTask')"></add-task>
+  </the-dialog>
+  <the-dialog v-model="editBoardOn" :tp="false">
+    <edit-board @closeDialog="closeDialog('editBoard')"></edit-board>
+  </the-dialog>
+  <the-dialog v-model="deleteBoardOn" :tp="false">
+    <delete-board @closeDialog="closeDialog('deleteBoard')"></delete-board>
   </the-dialog>
 </template>
 
@@ -21,8 +27,13 @@ import TheLogo from '../TheLogo.vue';
 import TheDialog from '../dialog/TheDialog.vue';
 import AddTask from '../dialog/AddTask.vue';
 
+import EditBoard from '../dialog/EditBoard.vue';
+import DeleteBoard from '../dialog/DeleteBoard.vue';
+
 const store = useStore();
 const addTaskOn = ref(false);
+const editBoardOn = ref(false);
+const deleteBoardOn = ref(false);
 
 const options = ref([
   { value: 'Edit Board', type: 'normal' },
@@ -31,9 +42,22 @@ const options = ref([
 const sidebarActive = computed(() => {
   return store.getters.getSidebar;
 });
+function toggleBoardDialog(option) {
+  if (option.toLowerCase() === 'edit board') {
+    editBoardOn.value = !editBoardOn.value;
+  } else if (option.toLowerCase() === 'delete board') {
+    deleteBoardOn.value = !deleteBoardOn.value;
+  }
+}
 
 function toggleAddTask() {
   addTaskOn.value = !addTaskOn.value;
+}
+
+function closeDialog(dialog) {
+  if (dialog === 'editBoard') editBoardOn.value = false;
+  if (dialog === 'deleteBoard') deleteBoardOn.value = false;
+  if (dialog === 'addTask') addTaskOn.value = false;
 }
 </script>
 

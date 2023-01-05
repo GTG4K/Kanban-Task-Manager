@@ -1,5 +1,5 @@
 <template>
-  <base-heading size="l">Add New Board</base-heading>
+  <base-heading size="l">Edit Board</base-heading>
   <input-text
     title="Board Name"
     type="text"
@@ -9,9 +9,9 @@
   <div class="columns">
     <h2>Board Columns</h2>
     <div v-for="column in columns" :key="column.id" class="column">
-      <input-text v-model="column.name"></input-text>
+      <input-text v-model="column.value"></input-text>
       <img
-        @click="removeColumn(column.name)"
+        @click="removeColumn(column.id)"
         src="../../../assets/svg/icon-cross.svg"
         alt=""
       />
@@ -20,42 +20,68 @@
       +Add New Column
     </base-button>
   </div>
-  <base-button size="full" type="button" @click="addBoard">Create New Board</base-button>
+  <base-button size="full" type="button" @click="saveBoard">Save Changes</base-button>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import InputText from '../../base/input/InputText.vue';
 
-const emits = defineEmits(['closeDialog']);
-
+const router = useRouter();
 const route = useRoute();
 const store = useStore();
+const emits = defineEmits(['closeDialog']);
+
 const routeName = ref(route.path);
+const [, , path] = routeName.value.split('/');
+const cleanedPath = path.replace('%20', ' ');
 
-const title = reactive({ value: null, error: false });
-const columns = ref([{ id: 1, name: null, error: false }]);
-
-let columnId = 2;
+let columnId = 1;
+const boards = store.getters.getBoards;
+const title = reactive({ value: cleanedPath, error: false });
+const columns = ref([]);
+boards.forEach((board) => {
+  if (board.name === cleanedPath) {
+    board.columns.forEach((column) => {
+      const newColumn = {
+        id: columnId,
+        oldName: column.name,
+        new: false,
+        value: column.name,
+        error: false,
+      };
+      columnId++;
+      columns.value.push(newColumn);
+    });
+  }
+});
 
 function addColumn() {
-  const newColumn = { id: columnId, name: null, error: false };
+  const newColumn = {
+    id: columnId,
+    oldName: null,
+    new: true,
+    value: null,
+    error: false,
+  };
   columnId++;
   columns.value.push(newColumn);
 }
-function removeColumn(columnName) {
-  const columnIndex = columns.value.findIndex((column) => column.name === columnName);
+
+function removeColumn(id) {
+  const columnIndex = columns.value.findIndex((column) => column.id === id);
   columns.value.splice(columnIndex, 1);
 }
 
-function addBoard() {
-  emits('closeDialog');
-  store.commit('addBoard', {
-    name: title.value,
+function saveBoard() {
+  store.commit('changeBoard', {
+    board: cleanedPath,
+    boardTitle: title.value,
     columns: columns.value,
   });
+  emits('closeDialog');
 }
 </script>
 

@@ -18,7 +18,7 @@
 import { ref, computed } from 'vue';
 
 const props = defineProps(['title', 'placeholder', 'modelValue', 'options']);
-const emits = defineEmits(['update:modelValue']);
+const emits = defineEmits(['update:modelValue', 'optionClick']);
 
 const selectedOption = ref(props.modelValue);
 const selected = ref(false);

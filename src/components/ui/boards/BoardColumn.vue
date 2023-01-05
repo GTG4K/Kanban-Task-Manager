@@ -13,7 +13,7 @@
   <div v-else @click="toggleAddColumn" class="add-column">
     <base-heading size="xl">+ New Column</base-heading>
     <the-dialog :tp="true" v-model="addColumnOn">
-      <add-column></add-column>
+      <add-column @closeDialog="closeDialog"></add-column>
     </the-dialog>
   </div>
 </template>
@@ -33,6 +33,10 @@ const title = computed(() => {
 
 function toggleAddColumn() {
   addColumnOn.value = !addColumnOn.value;
+}
+
+function closeDialog() {
+  addColumnOn.value = false;
 }
 </script>
 

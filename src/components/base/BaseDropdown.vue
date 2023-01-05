@@ -10,7 +10,7 @@
         v-for="option in options"
         :key="option.value"
         :class="option.type"
-        @click="toggleDropdown"
+        @click="toggleDropdownValue(option.value)"
       >
         {{ option.value }}
       </h2>
@@ -21,6 +21,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 const props = defineProps(['options']);
+const emits = defineEmits(['optionClick']);
 
 const active = ref(false);
 const dropdownActive = computed(() => {
@@ -29,6 +30,11 @@ const dropdownActive = computed(() => {
 
 function toggleDropdown() {
   active.value = !active.value;
+}
+
+function toggleDropdownValue(opt) {
+  active.value = !active.value;
+  emits('optionClick', opt);
 }
 </script>
 
